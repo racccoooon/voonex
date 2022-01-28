@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "voonex.web", "voonex.web\voonex.web.csproj", "{EB07B723-780E-4729-BEE1-413873E437EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "voonex.api", "voonex.api\voonex.api.csproj", "{D0BF9B32-75E0-405F-8236-DF16BA4D9286}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{EB07B723-780E-4729-BEE1-413873E437EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB07B723-780E-4729-BEE1-413873E437EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB07B723-780E-4729-BEE1-413873E437EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0BF9B32-75E0-405F-8236-DF16BA4D9286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0BF9B32-75E0-405F-8236-DF16BA4D9286}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0BF9B32-75E0-405F-8236-DF16BA4D9286}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0BF9B32-75E0-405F-8236-DF16BA4D9286}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
