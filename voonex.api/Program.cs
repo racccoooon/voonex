@@ -14,6 +14,11 @@ builder.Services.AddDbContextFactory<VoonexDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("voonex")));
 
 var app = builder.Build();
+var dbContextFactory = app.Services.GetRequiredService<IDbContextFactory<VoonexDbContext>>();
+await using (var dbContext = await dbContextFactory.CreateDbContextAsync())
+{
+    dbContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
