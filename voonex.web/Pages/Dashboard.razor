@@ -8,11 +8,14 @@
 
 @code {
 
+    [Inject]
+    public HttpClient HttpClient { get; set; } = null!;
+
     private async Task OnLogin()
     {
         
 
-        var client = new Client("https://localhost:7026", new HttpClient());
+        var client = new Client("https://localhost:7026", HttpClient);
         var loginAsync = await client.LoginAsync(new LoginRequest()
         {
             Email = "string",
@@ -22,7 +25,7 @@
 
     private async Task OnLogout()
     {
-        var client = new Client("https://localhost:7026", new HttpClient());
+        var client = new Client("https://localhost:7026", HttpClient);
         await client.LogoutAsync();
     }
 
