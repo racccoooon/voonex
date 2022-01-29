@@ -19,5 +19,6 @@ public class VoonexDbContext : DbContext
         modelBuilder.Entity<Server>();
         modelBuilder.Entity<ServerMember>();
         modelBuilder.Entity<ChatMessage>();
+        modelBuilder.Entity<Session>();
     }
 }
