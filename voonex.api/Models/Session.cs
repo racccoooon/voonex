@@ -2,6 +2,7 @@
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using NodaTime;
 
 namespace voonex.api.Models;
 
@@ -12,6 +13,7 @@ public class Session
     public User User { get; set; } = null!;
     [StringLength(64)]
     public string Token { get; set; } = null!;
+    public Instant CreatedAt { get; set; } = SystemClock.Instance.GetCurrentInstant();
 }
 
 public class SessionConfiguration : IEntityTypeConfiguration<Session>
