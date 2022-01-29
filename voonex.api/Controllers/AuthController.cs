@@ -28,6 +28,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("[action]")]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Register(RegisterRequest registerRequest)
     {
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
@@ -49,6 +51,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("[action]")]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Login(LoginRequest loginRequest)
     {
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
@@ -89,6 +93,8 @@ public class AuthController : ControllerBase
     
     [Authorize]
     [HttpPost("[action]")]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Logout()
     {
         var sessionToken = _userInfo.SessionToken;

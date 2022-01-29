@@ -1,7 +1,29 @@
-﻿<PageTitle>Dashboard</PageTitle>
+﻿@using voonex.api.client
+<PageTitle>Dashboard</PageTitle>
 
 <h3>Dashboard</h3>
 
+<MudButton OnClick="@OnLogin">Test Login</MudButton>
+<MudButton OnClick="@OnLogout">Test Logout</MudButton>
+
 @code {
-    
+
+    private async Task OnLogin()
+    {
+        
+
+        var client = new Client("https://localhost:7026", new HttpClient());
+        var loginAsync = await client.LoginAsync(new LoginRequest()
+        {
+            Email = "string",
+            Password = "string",
+        });
+    }
+
+    private async Task OnLogout()
+    {
+        var client = new Client("https://localhost:7026", new HttpClient());
+        await client.LogoutAsync();
+    }
+
 }
