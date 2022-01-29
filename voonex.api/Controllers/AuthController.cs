@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System.Net;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,13 +15,13 @@ namespace voonex.api.Controllers;
 [Route("[controller]")]
 public class AuthController : ControllerBase
 {
+    public const string ClaimTypeSessionToken = nameof(ClaimTypeSessionToken);
+    
     private readonly IDbContextFactory<VoonexDbContext> _dbContextFactory;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AuthController(IDbContextFactory<VoonexDbContext> dbContextFactory, IHttpContextAccessor httpContextAccessor)
+    public AuthController(IDbContextFactory<VoonexDbContext> dbContextFactory)
     {
         _dbContextFactory = dbContextFactory;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpPost("[action]")]
@@ -56,6 +59,24 @@ public class AuthController : ControllerBase
             UserId = user.Id,
         };
         await dbContext.Set<Session>().AddAsync(session);
+
+        await dbContext.SaveChangesAsync();
+        
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Name, user.Name),
+            new(ClaimTypes.Sid, user.Id.ToString()),
+            new(ClaimTypeSessionToken, session.Token),
+        };
+
+        var claimsIdentity = new ClaimsIdentity(
+            claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(claimsIdentity));
+        
         return Ok(new LoginResponse()
         {
             Token = session.Token,
@@ -63,10 +84,26 @@ public class AuthController : ControllerBase
         });
     }
     
-    // [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     [HttpPost("[action]")]
     public async Task<IActionResult> Logout()
     {
+        var sessionToken = HttpContext.User.Claims.First(x => x.Type == ClaimTypeSessionToken).Value;
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        var session = await dbContext.Set<Session>().AsQueryable()
+            .FirstOrDefaultAsync(x => x.Token == sessionToken);
+
+        if (session == null)
+        {
+            return Forbid();
+        }
+
+        dbContext.Set<Session>().Remove(session);
+        
+        await dbContext.SaveChangesAsync();
+
+        await HttpContext.SignOutAsync();
         return Ok();
     }
 }

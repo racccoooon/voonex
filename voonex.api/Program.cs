@@ -14,8 +14,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContextFactory<VoonexDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("voonex")));
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
-builder.Services.AddHttpContextAccessor();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+});
 
 var app = builder.Build();
 var dbContextFactory = app.Services.GetRequiredService<IDbContextFactory<VoonexDbContext>>();
@@ -34,7 +36,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();
