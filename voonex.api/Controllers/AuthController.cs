@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Randomizer;
 using voonex.api.DTOs;
 using voonex.api.Models;
+using voonex.api.Services;
 
 namespace voonex.api.Controllers;
 
@@ -18,10 +19,12 @@ public class AuthController : ControllerBase
     public const string ClaimTypeSessionToken = nameof(ClaimTypeSessionToken);
     
     private readonly IDbContextFactory<VoonexDbContext> _dbContextFactory;
-
-    public AuthController(IDbContextFactory<VoonexDbContext> dbContextFactory)
+    private readonly UserInfo _userInfo;
+    
+    public AuthController(IDbContextFactory<VoonexDbContext> dbContextFactory, UserInfo userInfo)
     {
         _dbContextFactory = dbContextFactory;
+        _userInfo = userInfo;
     }
 
     [HttpPost("[action]")]
@@ -88,7 +91,7 @@ public class AuthController : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> Logout()
     {
-        var sessionToken = HttpContext.User.Claims.First(x => x.Type == ClaimTypeSessionToken).Value;
+        var sessionToken = _userInfo.SessionToken;
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
         var session = await dbContext.Set<Session>().AsQueryable()

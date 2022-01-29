@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using voonex.api.Models;
+using voonex.api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 {
     options.ExpireTimeSpan = TimeSpan.FromDays(30);
 });
+builder.Services.AddScoped<UserInfo>();
 
 var app = builder.Build();
 var dbContextFactory = app.Services.GetRequiredService<IDbContextFactory<VoonexDbContext>>();
