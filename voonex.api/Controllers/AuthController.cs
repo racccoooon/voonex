@@ -84,7 +84,7 @@ public class AuthController : ControllerBase
         });
     }
     
-    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize]
     [HttpPost("[action]")]
     public async Task<IActionResult> Logout()
     {
