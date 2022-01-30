@@ -1,5 +1,25 @@
-﻿<h3>WelcomePage</h3>
+﻿@using voonex.api.client
+@using voonex.web.Services
+<h3>WelcomePage</h3>
+
+
+<MudButton OnClick="@OnLogin">Test Login</MudButton>
 
 @code {
+    [Inject]
+    public HttpClient HttpClient { get; set; } = null!;
+
+    [CascadingParameter]
+    public ILoginManager LoginManager { get; set; } = null!;
     
+    private async Task OnLogin()
+    {
+        var client = new Client("https://localhost:7026", HttpClient);
+        var loginAsync = await client.LoginAsync(new LoginRequest()
+        {
+            Email = "string",
+            Password = "string",
+        });
+        await LoginManager.RefreshLoginStateAsync();
+    }
 }

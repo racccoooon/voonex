@@ -1,21 +1,61 @@
 ﻿@using FluentBlazorRouter
+@using voonex.api.client
 @using voonex.web.Pages
+@using voonex.web.Services
 
-@*
-<FluentRouter>
-    
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
-    </Found>
-    <NotFound>
-        <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</FluentRouter>
-*@
+@if (_isLoading)
+{
+    //<MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true"/>
+}
+else
+{
+    <CascadingValue IsFixed Value="@_loginManager">
+        @if (_isLoggedIn)
+        {
+            <FluentRouter>
+                <Found Context="routeData">
+                    <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+                </Found>
+                <NotFound>
+                    <PageTitle>Not found</PageTitle>
+                    <LayoutView Layout="@typeof(MainLayout)">
+                        <p role="alert">Sorry, there's nothing at this address.</p>
+                    </LayoutView>
+                </NotFound>
+            </FluentRouter>
+        }
+        else
+        {
+            <WelcomePage/>
+        }
+    </CascadingValue>
+}
 
-<WelcomePage>
-    
-</WelcomePage>
+@code{
+
+    private bool _isLoading = true;
+    private bool _isLoggedIn;
+
+    private ILoginManager _loginManager = null!;
+
+    [Inject]
+    public HttpClient HttpClient { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _loginManager = new LoginManager(RefreshApp);
+        await RefreshApp();
+        
+        _isLoading = false;
+    }
+
+    private async Task RefreshApp()
+    {
+        var client = new Client("https://localhost:7026", HttpClient);
+        _isLoggedIn = (await client.IsLoggedInAsync()).IsLoggedIn;
+        await InvokeAsync(StateHasChanged);
+    }
+
+}

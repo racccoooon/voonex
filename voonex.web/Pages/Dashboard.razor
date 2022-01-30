@@ -1,9 +1,9 @@
 ﻿@using voonex.api.client
+@using voonex.web.Services
 <PageTitle>Dashboard</PageTitle>
 
 <h3>Dashboard</h3>
 
-<MudButton OnClick="@OnLogin">Test Login</MudButton>
 <MudButton OnClick="@OnLogout">Test Logout</MudButton>
 
 @code {
@@ -11,22 +11,14 @@
     [Inject]
     public HttpClient HttpClient { get; set; } = null!;
 
-    private async Task OnLogin()
-    {
-        
-
-        var client = new Client("https://localhost:7026", HttpClient);
-        var loginAsync = await client.LoginAsync(new LoginRequest()
-        {
-            Email = "string",
-            Password = "string",
-        });
-    }
-
+    [CascadingParameter]
+    public ILoginManager LoginManager { get; set; } = null!;
+    
     private async Task OnLogout()
     {
         var client = new Client("https://localhost:7026", HttpClient);
         await client.LogoutAsync();
+        await LoginManager.RefreshLoginStateAsync();
     }
 
 }
