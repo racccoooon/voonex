@@ -12,6 +12,8 @@ public class UserInfo
         _httpContextAccessor = httpContextAccessor;
     }
 
+    public bool HasSessionToken => _httpContextAccessor.HttpContext!.User.Claims
+        .Any(x => x.Type == AuthController.ClaimTypeSessionToken);
     public string SessionToken => _httpContextAccessor.HttpContext!.User.Claims
         .First(x => x.Type == AuthController.ClaimTypeSessionToken).Value;
     public Guid UserId => Guid.Parse(_httpContextAccessor.HttpContext!.User.Claims

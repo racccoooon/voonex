@@ -115,4 +115,27 @@ public class AuthController : ControllerBase
         await HttpContext.SignOutAsync();
         return Ok();
     }
+
+    [HttpGet("[action]")]
+    [ProducesResponseType(typeof(IsLoggedInResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> IsLoggedIn()
+    {
+        if (_userInfo.HasSessionToken == false)
+        {
+            return Ok(new IsLoggedInResponse()
+            {
+                IsLoggedIn = false
+            });
+        }
+        
+        var sessionToken = _userInfo.SessionToken;
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var session = await dbContext.Set<Session>().AsQueryable()
+            .FirstOrDefaultAsync(x => x.Token == sessionToken);
+        
+        return Ok(new IsLoggedInResponse()
+        {
+            IsLoggedIn = session != null
+        });
+    }
 }
