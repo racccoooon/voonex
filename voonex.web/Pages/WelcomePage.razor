@@ -24,9 +24,12 @@
     private void OnLogin() => DialogService.Show<LoginDialog>("Login", new DialogOptions()
     {
         CloseButton = true,
+        MaxWidth = MaxWidth.Medium,
     });
 
-    private void OnRegister()
+    private void OnRegister() => DialogService.Show<RegisterDialog>("Register", new DialogOptions()
     {
-    }
+        CloseButton = true,
+        MaxWidth = MaxWidth.Medium,
+    });
 }

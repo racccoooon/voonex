@@ -18,6 +18,7 @@
     {
         var client = new Client("https://localhost:7026", HttpClient);
         await client.LogoutAsync();
+        
         await LoginManager.RefreshLoginStateAsync();
     }
 

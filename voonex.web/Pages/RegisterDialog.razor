@@ -5,12 +5,14 @@
     <DialogContent>
         <MudForm>
             <MudTextField @bind-Value="@_model.EMail" Required Label="E-Mail"/>
+            <MudTextField @bind-Value="@_model.Username" Required Label="Username"/>
             <MudTextField @bind-Value="@_model.Password" InputType="@InputType.Password" Required Label="Password"/>
+            <MudTextField @bind-Value="@_model.PasswordRepeated" InputType="@InputType.Password" Required Label="Password (repeated)"/>
         </MudForm>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="@Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="@Login">Login</MudButton>
+        <MudButton Color="Color.Primary" OnClick="@Register">Register</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -25,7 +27,7 @@
     [Inject]
     public ILoginManager LoginManager { get; set; } = null!;
 
-    private LoginDialogModel _model = new();
+    private RegisterDialogModel _model = new();
 
     protected override void OnInitialized()
     {
@@ -34,9 +36,17 @@
         MudDialog.Options.CloseButton = true;
     }
 
-    private async Task Login()
+    private async Task Register()
     {
         var client = new Client("https://localhost:7026", HttpClient);
+        
+        await client.RegisterAsync(new RegisterRequest
+        {
+            Email = _model.EMail,
+            UserName = _model.Username,
+            Password = _model.Password,
+            PasswordConfirm = _model.PasswordRepeated,
+        });
         
         await client.LoginAsync(new LoginRequest()
         {
@@ -51,11 +61,11 @@
 
     private void Cancel() => MudDialog.Cancel();
 
-
-
-    public class LoginDialogModel
+    public class RegisterDialogModel
     {
         public string EMail { get; set; } = "";
+        public string Username { get; set; } = "";
         public string Password { get; set; } = "";
+        public string PasswordRepeated { get; set; } = "";
     }
 }
