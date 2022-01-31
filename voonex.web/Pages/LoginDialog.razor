@@ -1,0 +1,49 @@
+﻿@using voonex.web.Services
+@using voonex.api.client
+
+<MudDialog>
+    <DialogContent>
+        Dialog Content
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="@Login">Login</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [Inject]
+    public HttpClient HttpClient { get; set; } = null!;
+
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; } = null!;
+    
+    [CascadingParameter]
+    public ILoginManager LoginManager { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        MudDialog.Options.CloseButton = true;
+    }
+
+    private async Task Login()
+    {
+        var client = new Client("https://localhost:7026", HttpClient);
+        
+        await client.LoginAsync(new LoginRequest()
+        {
+            Email = "string",
+            Password = "string",
+        });
+        
+        await LoginManager.RefreshLoginStateAsync();
+        
+        MudDialog.Close();
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+}

@@ -3,35 +3,84 @@
 @using voonex.web.Pages
 @using voonex.web.Services
 
-@if (_isLoading)
-{
-    //<MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true"/>
-}
-else
-{
-    <CascadingValue IsFixed Value="@_loginManager">
+<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+<MudLayout>
+    <MudAppBar Elevation="1">
         @if (_isLoggedIn)
         {
-            <FluentRouter>
-                <Found Context="routeData">
-                    <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
-                </Found>
-                <NotFound>
-                    <PageTitle>Not found</PageTitle>
-                    <LayoutView Layout="@typeof(MainLayout)">
-                        <p role="alert">Sorry, there's nothing at this address.</p>
-                    </LayoutView>
-                </NotFound>
-            </FluentRouter>
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle"/>
+        }
+        <MudText Typo="Typo.h5" Class="ml-3">voonex</MudText>
+        <MudSpacer/>
+        <MudIconButton Icon="@(_isDarkMode ? Icons.Rounded.LightMode : Icons.Rounded.DarkMode)" Color="Color.Inherit" OnClick="@ToggleDarkMode"/>
+        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End"/>
+    </MudAppBar>
+    @if (_isLoggedIn)
+    {
+        <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2" Width="250px">
+            <NavMenu/>
+        </MudDrawer>
+    }
+    <MudMainContent>
+        @if (_isLoading)
+        {
+            //<MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true"/>
         }
         else
         {
-            <WelcomePage/>
+            <CascadingValue IsFixed Value="@_loginManager">
+                @if (_isLoggedIn)
+                {
+                    <FluentRouter>
+                        <Found Context="routeData">
+                            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+                        </Found>
+                        <NotFound>
+                            <PageTitle>Not found</PageTitle>
+                            <LayoutView Layout="@typeof(MainLayout)">
+                                <p role="alert">Sorry, there's nothing at this address.</p>
+                            </LayoutView>
+                        </NotFound>
+                    </FluentRouter>
+                }
+                else
+                {
+                    <WelcomePage/>
+                }
+            </CascadingValue>
         }
-    </CascadingValue>
-}
+
+    </MudMainContent>
+</MudLayout>
 
 @code{
+
+    bool _drawerOpen = true;
+
+    private bool _isDarkMode;
+    private MudThemeProvider _mudThemeProvider = null!;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+            StateHasChanged();
+        }
+    }
+
+    private void ToggleDarkMode()
+    {
+        _isDarkMode = !_isDarkMode;
+    }
 
     private bool _isLoading = true;
     private bool _isLoggedIn;
@@ -47,7 +96,7 @@ else
 
         _loginManager = new LoginManager(RefreshApp);
         await RefreshApp();
-        
+
         _isLoading = false;
     }
 

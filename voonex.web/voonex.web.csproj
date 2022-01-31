@@ -23,4 +23,10 @@
       <ProjectReference Include="..\voonex.api.client\voonex.api.client.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Update="Pages\LoginDialog.razor">
+        <DependentUpon>WelcomePage.razor</DependentUpon>
+      </Content>
+    </ItemGroup>
+
 </Project>

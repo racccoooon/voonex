@@ -1,25 +1,32 @@
 ﻿@using voonex.api.client
 @using voonex.web.Services
-<h3>WelcomePage</h3>
 
-
-<MudButton OnClick="@OnLogin">Test Login</MudButton>
+<MudContainer Class="mt-16">
+    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">voonex</MudText>
+    <MudText Align="Align.Center">Literally a worse discord clone! Just text chat and nothing else!</MudText>
+    <div class="d-flex flex-row justify-center mt-5">
+        <MudButton Color="@Color.Primary" OnClick="@OnLogin">Login</MudButton>
+        <MudButton Color="@Color.Secondary" OnClick="@OnRegister">Register</MudButton>
+    </div>
+</MudContainer>
 
 @code {
+    
     [Inject]
     public HttpClient HttpClient { get; set; } = null!;
+    
+    [Inject]
+    public IDialogService DialogService { get; set; } = null!;
 
     [CascadingParameter]
     public ILoginManager LoginManager { get; set; } = null!;
-    
-    private async Task OnLogin()
+
+    private void OnLogin() => DialogService.Show<LoginDialog>("Login", new DialogOptions()
     {
-        var client = new Client("https://localhost:7026", HttpClient);
-        var loginAsync = await client.LoginAsync(new LoginRequest()
-        {
-            Email = "string",
-            Password = "string",
-        });
-        await LoginManager.RefreshLoginStateAsync();
+        CloseButton = true,
+    });
+
+    private void OnRegister()
+    {
     }
 }
