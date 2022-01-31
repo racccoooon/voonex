@@ -19,7 +19,7 @@
     [CascadingParameter]
     public MudDialogInstance MudDialog { get; set; } = null!;
     
-    [CascadingParameter]
+    [Inject]
     public ILoginManager LoginManager { get; set; } = null!;
 
     protected override void OnInitialized()

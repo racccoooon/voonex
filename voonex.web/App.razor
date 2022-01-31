@@ -31,26 +31,24 @@
         }
         else
         {
-            <CascadingValue IsFixed Value="@_loginManager">
-                @if (_isLoggedIn)
-                {
-                    <FluentRouter>
-                        <Found Context="routeData">
-                            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
-                        </Found>
-                        <NotFound>
-                            <PageTitle>Not found</PageTitle>
-                            <LayoutView Layout="@typeof(MainLayout)">
-                                <p role="alert">Sorry, there's nothing at this address.</p>
-                            </LayoutView>
-                        </NotFound>
-                    </FluentRouter>
-                }
-                else
-                {
-                    <WelcomePage/>
-                }
-            </CascadingValue>
+            @if (_isLoggedIn)
+            {
+                <FluentRouter>
+                    <Found Context="routeData">
+                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+                    </Found>
+                    <NotFound>
+                        <PageTitle>Not found</PageTitle>
+                        <LayoutView Layout="@typeof(MainLayout)">
+                            <p role="alert">Sorry, there's nothing at this address.</p>
+                        </LayoutView>
+                    </NotFound>
+                </FluentRouter>
+            }
+            else
+            {
+                <WelcomePage/>
+            }
         }
 
     </MudMainContent>
@@ -85,7 +83,8 @@
     private bool _isLoading = true;
     private bool _isLoggedIn;
 
-    private ILoginManager _loginManager = null!;
+    [Inject]
+    private ILoginManager LoginManager { get; set; } = null!;
 
     [Inject]
     public HttpClient HttpClient { get; set; } = null!;
@@ -94,7 +93,7 @@
     {
         await base.OnInitializedAsync();
 
-        _loginManager = new LoginManager(RefreshApp);
+        LoginManager.RefreshFunction = RefreshApp;
         await RefreshApp();
 
         _isLoading = false;

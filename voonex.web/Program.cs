@@ -23,6 +23,8 @@ builder.Services.AddScoped(sp =>
     return httpClient;
 });
 
+builder.Services.AddScoped<ILoginManager, LoginManager>();
+
 builder.Services.AddFluentRouting(rootBuilder =>
 {
     rootBuilder.WithPage<Dashboard>("dashboard");

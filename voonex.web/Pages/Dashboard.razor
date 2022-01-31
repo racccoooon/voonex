@@ -11,7 +11,7 @@
     [Inject]
     public HttpClient HttpClient { get; set; } = null!;
 
-    [CascadingParameter]
+    [Inject]
     public ILoginManager LoginManager { get; set; } = null!;
     
     private async Task OnLogout()

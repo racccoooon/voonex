@@ -5,20 +5,21 @@ namespace voonex.web.Services;
 
 public class LoginManager : ILoginManager
 {
-    private readonly Func<Task> _refreshApp;
-
-    public LoginManager(Func<Task> refreshApp)
-    {
-        _refreshApp = refreshApp;
-    }
-
     public async Task RefreshLoginStateAsync()
     {
-        await _refreshApp.Invoke();
+        await _refreshFunction.Invoke();
+    }
+
+    private Func<Task> _refreshFunction = null!;
+    public Func<Task> RefreshFunction
+    {
+        set => _refreshFunction = value;
     }
 }
 
 public interface ILoginManager
 {
     Task RefreshLoginStateAsync();
+    
+    Func<Task> RefreshFunction { set; }
 }
