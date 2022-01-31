@@ -20,6 +20,9 @@
 
     [Inject]
     public HttpClient HttpClient { get; set; } = null!;
+    
+    [Inject]
+    public NavigationManager NavigationManager { get; set; } = null!;
 
     [CascadingParameter]
     public MudDialogInstance MudDialog { get; set; } = null!;
@@ -54,6 +57,7 @@
             Password = _model.Password,
         });
         
+        NavigationManager.NavigateTo("/dashboard");
         await LoginManager.RefreshLoginStateAsync();
         
         MudDialog.Close();
