@@ -1,7 +1,50 @@
-﻿<PageTitle>New Server</PageTitle>
+﻿@using voonex.api.client
+@using voonex.eventhub
+@using voonex.web.Events
+<PageTitle>New Server</PageTitle>
 
-<h3>CreateServer</h3>
+<MudContainer>
+    <MudText Typo="Typo.h3">Create Your Server</MudText>
+    <MudForm @ref="@_form">
+        <MudTextField @bind-Value="@_model.ServerName" Required Label="Server Name"/>
+        <MudButton Class="mt-3" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@OnCreateServer">Create</MudButton>
+    </MudForm>
+</MudContainer>
 
 @code {
+    [Inject]
+    public HttpClient HttpClient { get; set; } = null!;
     
+    [Inject]
+    public IEventHub EventHub { get; set; } = null!;
+    
+    [Inject]
+    public NavigationManager NavigationManager { get; set; } = null!;
+    
+    private readonly CreateServerModel _model = new ();
+
+    private async Task OnCreateServer()
+    {
+        if (!_form.IsValid)
+        {
+            return;
+        }
+
+        var client = new Client("https://localhost:7026", HttpClient);
+        var response = await client.CreateServerAsync(new CreateServerRequest()
+        {
+            ServerName = _model.ServerName
+        });
+        
+        EventHub.Send(new ServerCreatedEvent());
+        
+        NavigationManager.NavigateTo("/server/" + response.ServerId);
+    }
+    
+    public class CreateServerModel
+    {
+        public string ServerName { get; set; } = "";
+    }
+
+    private MudForm _form;
 }

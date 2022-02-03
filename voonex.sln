@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "voonex.api", "voonex.api\vo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "voonex.api.client", "voonex.api.client\voonex.api.client.csproj", "{08BAAA77-3FA1-4603-9532-3810D55C700E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "voonex.eventhub", "voonex.eventhub\voonex.eventhub.csproj", "{D9ECED8B-21B4-4F58-83A1-A8D61443E319}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{08BAAA77-3FA1-4603-9532-3810D55C700E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08BAAA77-3FA1-4603-9532-3810D55C700E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08BAAA77-3FA1-4603-9532-3810D55C700E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9ECED8B-21B4-4F58-83A1-A8D61443E319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9ECED8B-21B4-4F58-83A1-A8D61443E319}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9ECED8B-21B4-4F58-83A1-A8D61443E319}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9ECED8B-21B4-4F58-83A1-A8D61443E319}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

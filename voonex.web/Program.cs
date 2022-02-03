@@ -6,13 +6,13 @@ using voonex.web;
 using voonex.web.Pages;
 using voonex.api.client;
 using MudBlazor.Services;
+using voonex.eventhub;
 using voonex.web.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddMudServices();
-
 builder.Services.AddScoped(sp =>
 {
     var httpClientHandler = new VoonexHttpClientHandler();
@@ -22,15 +22,15 @@ builder.Services.AddScoped(sp =>
     };
     return httpClient;
 });
-
 builder.Services.AddScoped<ILoginManager, LoginManager>();
-
+builder.Services.AddEventHub();
 builder.Services.AddFluentRouting(rootBuilder =>
 {
     rootBuilder.WithPage<Dashboard>("dashboard");
     rootBuilder.WithGroup("server", serverBuilder =>
     {
         serverBuilder.WithPage<CreateServer>("create");
+        serverBuilder.WithPage<ServerPage>("{ServerId:guid}");
     });
 });
 

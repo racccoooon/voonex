@@ -1,10 +1,16 @@
-﻿<MudPaper Width="250px" Elevation="0" Height="100%">
+﻿@using voonex.api.client
+@using voonex.eventhub
+@using voonex.web.Events
+<MudPaper Width="250px" Elevation="0" Height="100%">
     
     <div class="d-flex justify-space-between flex-column" style="height:100%;">
         <MudNavMenu Rounded="true" Margin="Margin.Normal" Color="Color.Tertiary" Class="pa-2">
-                <MudNavLink Href="/dashboard" Icon="@Icons.Filled.Dashboard" Match="@NavLinkMatch.All">Dashboard</MudNavLink>
-                <MudDivider></MudDivider>
-                @* show user servers *@
+            <MudNavLink Href="/dashboard" Icon="@Icons.Filled.Dashboard" Match="@NavLinkMatch.All">Dashboard</MudNavLink>
+            <MudDivider></MudDivider>
+            @foreach (var server in _userServers)
+            {
+                <MudNavLink Href="@($"/server/{server.ServerId}")" Match="@NavLinkMatch.Prefix">@server.ServerName</MudNavLink>
+            }
         </MudNavMenu>
         <MudNavMenu Rounded="true" Margin="Margin.Normal" Color="Color.Tertiary" Class="pa-2">
             <MudNavLink Href="/server/create" Icon="@Icons.Filled.AddCircle" Match="@NavLinkMatch.All">Create Server</MudNavLink>
@@ -12,3 +18,32 @@
     </div>
 
 </MudPaper>
+
+@code
+{
+    [Inject]
+    public HttpClient HttpClient { get; set; } = null!;
+    
+    [Inject]
+    public IEventHub EventHub { get; set; } = null!;
+    
+    [Inject]
+    public NavigationManager NavigationManager { get; set; } = null!;
+
+    private List<GetUserServersResponse> _userServers = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await RefreshAsync();
+
+        EventHub.Listen<ServerCreatedEvent>(_ => RefreshAsync());
+    }
+
+    private async Task RefreshAsync()
+    {
+        var client = new Client("https://localhost:7026", HttpClient);
+        _userServers = (await client.GetUserServersAsync()).ToList();
+        await InvokeAsync(StateHasChanged);
+    }
+}

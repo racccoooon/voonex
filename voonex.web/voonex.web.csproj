@@ -21,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\voonex.api.client\voonex.api.client.csproj" />
+      <ProjectReference Include="..\voonex.eventhub\voonex.eventhub.csproj" />
     </ItemGroup>
 
     <ItemGroup>
