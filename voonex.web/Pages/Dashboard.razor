@@ -1,4 +1,6 @@
 ﻿@using voonex.api.client
+@using voonex.eventhub
+@using voonex.web.Events
 @using voonex.web.Services
 <PageTitle>Dashboard</PageTitle>
 
@@ -12,14 +14,14 @@
     public HttpClient HttpClient { get; set; } = null!;
 
     [Inject]
-    public ILoginManager LoginManager { get; set; } = null!;
+    public IEventHub EventHub { get; set; } = null!;
     
     private async Task OnLogout()
     {
         var client = new Client("https://localhost:7026", HttpClient);
         await client.LogoutAsync();
         
-        await LoginManager.RefreshLoginStateAsync();
+        EventHub.Send(new LogOutEvent());
     }
 
 }

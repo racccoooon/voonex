@@ -22,7 +22,6 @@ builder.Services.AddScoped(sp =>
     };
     return httpClient;
 });
-builder.Services.AddScoped<ILoginManager, LoginManager>();
 builder.Services.AddEventHub();
 builder.Services.AddFluentRouting(rootBuilder =>
 {

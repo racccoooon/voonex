@@ -28,6 +28,9 @@
       <Content Update="Pages\LoginDialog.razor">
         <DependentUpon>WelcomePage.razor</DependentUpon>
       </Content>
+      <Content Update="Pages\RegisterDialog.razor">
+        <DependentUpon>WelcomePage.razor</DependentUpon>
+      </Content>
     </ItemGroup>
 
 </Project>

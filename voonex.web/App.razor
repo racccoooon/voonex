@@ -1,5 +1,7 @@
 ﻿@using FluentBlazorRouter
 @using voonex.api.client
+@using voonex.eventhub
+@using voonex.web.Events
 @using voonex.web.Pages
 @using voonex.web.Services
 
@@ -84,7 +86,7 @@
     private bool _isLoggedIn;
 
     [Inject]
-    private ILoginManager LoginManager { get; set; } = null!;
+    public IEventHub EventHub { get; set; } = null!;
 
     [Inject]
     public HttpClient HttpClient { get; set; } = null!;
@@ -93,7 +95,8 @@
     {
         await base.OnInitializedAsync();
 
-        LoginManager.RefreshFunction = RefreshApp;
+        EventHub.Listen<LogInEvent>(_ => RefreshApp());
+        EventHub.Listen<LogOutEvent>(_ => RefreshApp());
         await RefreshApp();
 
         _isLoading = false;

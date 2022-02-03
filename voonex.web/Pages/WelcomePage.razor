@@ -17,9 +17,7 @@
     
     [Inject]
     public IDialogService DialogService { get; set; } = null!;
-
-    [Inject]
-    public ILoginManager LoginManager { get; set; } = null!;
+    
 
     private void OnLogin() => DialogService.Show<LoginDialog>("Login", new DialogOptions()
     {

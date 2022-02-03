@@ -1,5 +1,7 @@
 ﻿@using voonex.web.Services
 @using voonex.api.client
+@using voonex.eventhub
+@using voonex.web.Events
 
 <MudDialog>
     <DialogContent>
@@ -26,7 +28,7 @@
     public MudDialogInstance MudDialog { get; set; } = null!;
     
     [Inject]
-    public ILoginManager LoginManager { get; set; } = null!;
+    public IEventHub EventHub { get; set; } = null!;
 
     private LoginDialogModel _model = new();
 
@@ -48,7 +50,7 @@
         });
         
         NavigationManager.NavigateTo("/dashboard");
-        await LoginManager.RefreshLoginStateAsync();
+        EventHub.Send(new LogInEvent());
         
         MudDialog.Close();
     }
