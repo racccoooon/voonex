@@ -1,6 +1,7 @@
 ﻿@using voonex.api.client
 @using voonex.eventhub
 @using voonex.web.Events
+@using voonex.web.Services
 <PageTitle>New Server</PageTitle>
 
 <MudContainer>
@@ -13,7 +14,7 @@
 
 @code {
     [Inject]
-    public HttpClient HttpClient { get; set; } = null!;
+    public ClientFactory ClientFactory { get; set; } = null!;
     
     [Inject]
     public IEventHub EventHub { get; set; } = null!;
@@ -30,7 +31,7 @@
             return;
         }
 
-        var client = new Client("https://localhost:7026", HttpClient);
+        var client = ClientFactory.CreateClient();
         var response = await client.CreateServerAsync(new CreateServerRequest()
         {
             ServerName = _model.ServerName

@@ -89,8 +89,8 @@
     public IEventHub EventHub { get; set; } = null!;
 
     [Inject]
-    public HttpClient HttpClient { get; set; } = null!;
-
+    public ClientFactory ClientFactory { get; set; } = null!;
+    
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -104,7 +104,7 @@
 
     private async Task RefreshApp()
     {
-        var client = new Client("https://localhost:7026", HttpClient);
+        var client = ClientFactory.CreateClient();
         _isLoggedIn = (await client.IsLoggedInAsync()).IsLoggedIn;
         await InvokeAsync(StateHasChanged);
     }

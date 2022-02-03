@@ -11,17 +11,16 @@
 @code {
 
     [Inject]
-    public HttpClient HttpClient { get; set; } = null!;
+    public ClientFactory ClientFactory { get; set; } = null!;
 
     [Inject]
     public IEventHub EventHub { get; set; } = null!;
     
     private async Task OnLogout()
     {
-        var client = new Client("https://localhost:7026", HttpClient);
+        var client = ClientFactory.CreateClient();
         await client.LogoutAsync();
         
         EventHub.Send(new LogOutEvent());
     }
-
 }

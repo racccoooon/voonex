@@ -1,6 +1,7 @@
 ﻿@using voonex.api.client
 @using voonex.eventhub
 @using voonex.web.Events
+@using voonex.web.Services
 <MudPaper Width="250px" Elevation="0" Height="100%">
     
     <div class="d-flex justify-space-between flex-column" style="height:100%;">
@@ -22,7 +23,7 @@
 @code
 {
     [Inject]
-    public HttpClient HttpClient { get; set; } = null!;
+    public ClientFactory ClientFactory { get; set; } = null!;
     
     [Inject]
     public IEventHub EventHub { get; set; } = null!;
@@ -42,7 +43,7 @@
 
     private async Task RefreshAsync()
     {
-        var client = new Client("https://localhost:7026", HttpClient);
+        var client = ClientFactory.CreateClient();
         _userServers = (await client.GetUserServersAsync()).ToList();
         await InvokeAsync(StateHasChanged);
     }

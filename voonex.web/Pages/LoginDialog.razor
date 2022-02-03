@@ -17,18 +17,17 @@
 </MudDialog>
 
 @code {
-
-    [Inject]
-    public HttpClient HttpClient { get; set; } = null!;
-
     [Inject]
     public NavigationManager NavigationManager { get; set; } = null!;
     
-    [CascadingParameter]
-    public MudDialogInstance MudDialog { get; set; } = null!;
-    
     [Inject]
     public IEventHub EventHub { get; set; } = null!;
+
+    [Inject]
+    public ClientFactory ClientFactory { get; set; } = null!;
+    
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; } = null!;
 
     private LoginDialogModel _model = new();
 
@@ -41,7 +40,7 @@
 
     private async Task Login()
     {
-        var client = new Client("https://localhost:7026", HttpClient);
+        var client = ClientFactory.CreateClient();
         
         await client.LoginAsync(new LoginRequest()
         {
