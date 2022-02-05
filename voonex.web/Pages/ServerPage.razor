@@ -20,23 +20,23 @@
         <MudForm @ref="@_form">
             <div class="d-flex flex-row">
                 <MudTextField Class="pr-3" @bind-Value="@_model.Message"/>
-                <MudIconButton 
-                    Class="rounded-pill" 
-                    Icon="@Icons.Filled.Send" 
-                    Variant="Variant.Text" 
+                <MudIconButton
+                    Class="rounded-pill"
+                    Icon="@Icons.Filled.Send"
+                    Variant="Variant.Text"
                     Color="Color.Primary"
                     OnClick="@OnSendChatMessage"/>
             </div>
 
         </MudForm>
     </div>
-    
+
 </MudContainer>
 
 @code {
     private readonly List<GetChatMessagesResponse> _messages = new();
-    
-    [Parameter] 
+
+    [Parameter]
     public Guid ServerId { get; set; }
 
     [Inject]
@@ -63,15 +63,23 @@
     }
 
     private MudForm _form = null!;
-    private readonly ChatMessageModel _model = new ();
+    private readonly ChatMessageModel _model = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        await base.OnInitializedAsync();
-
+        await base.OnParametersSetAsync();
+        
+        if (HubConnection.State == HubConnectionState.Connected)
+        {
+            HubConnection.Remove(nameof(IChatHub.ChatUpdated));
+            await HubConnection.InvokeAsync(nameof(ChatHub.LeaveChat), ServerId);
+            await HubConnection.StopAsync();
+            _messages.Clear();
+        }
+        
         var client = ClientFactory.CreateClient();
         _messages.AddRange(await client.GetChatMessagesAsync(ServerId));
-
+        
         await HubConnection.StartAsync();
         await HubConnection.InvokeAsync(nameof(ChatHub.JoinChat), ServerId);
         HubConnection.On<ChatUpdateDto>(nameof(IChatHub.ChatUpdated), OnChatUpdate);
@@ -86,6 +94,7 @@
         });
         InvokeAsync(StateHasChanged);
     }
+
     public class ChatMessageModel
     {
         public string Message { get; set; } = "";
