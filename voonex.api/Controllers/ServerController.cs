@@ -9,7 +9,7 @@ namespace voonex.api.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("[controller]")]
+[Route("[controller]/[action]")]
 public class ServerController : ControllerBase
 {
     private readonly IDbContextFactory<VoonexDbContext> _dbContextFactory;
@@ -22,7 +22,7 @@ public class ServerController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("[action]")]
+    [HttpPost]
     [ProducesResponseType(typeof(CreateServerResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateServer(CreateServerRequest serverRequest)
     {
@@ -48,7 +48,7 @@ public class ServerController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("[action]")]
+    [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<GetUserServersResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserServers()
     {

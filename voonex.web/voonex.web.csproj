@@ -11,6 +11,7 @@
         <PackageReference Include="FluentBlazorRouter" Version="1.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
@@ -25,6 +26,7 @@
     <ItemGroup>
       <ProjectReference Include="..\voonex.api.client\voonex.api.client.csproj" />
       <ProjectReference Include="..\voonex.eventhub\voonex.eventhub.csproj" />
+      <ProjectReference Include="..\voonex.signalr\voonex.signalr.csproj" />
     </ItemGroup>
 
     <ItemGroup>

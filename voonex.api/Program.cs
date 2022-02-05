@@ -4,12 +4,15 @@ using Quartz;
 using voonex.api.Models;
 using voonex.api.Services;
 using voonex.api.Services.Jobs;
+using voonex.signalr.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
 {
@@ -74,5 +77,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ChatHub>("/hubs/chat");
 
 app.Run();
